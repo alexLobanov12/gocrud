@@ -3,16 +3,17 @@ package main
 import (
 	"log"
 	"net/http"
+	"gocrud/controllers"
+	"github.com/julienschmidt/httprouter"
 )
 
-func home(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("home endpoint"))
-}
-
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
-	log.Println("run server")
-	err := http.ListenAndServe(":4000", mux)
+	router := httprouter.New()
+	log.Println("run server...")
+	MController := controllers.MainController{}
+	router.GET("/", MController.Home)
+	router.GET("/notes", MController.Notes)
+	router.GET("/notes/:id", MController.ShowNote)
+	err := http.ListenAndServe(":4000", router)
 	log.Fatal(err)
 }
