@@ -3,6 +3,8 @@ package controllers
 import (
 	"net/http"
 	"github.com/julienschmidt/httprouter"
+	"encoding/json"
+	"gocrud/models"
 )
 
 type MainController struct {
@@ -23,4 +25,13 @@ func (m *MainController) Notes(w http.ResponseWriter, r *http.Request, _ httprou
 func (m *MainController) ShowNote(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	m.Note = string(params.ByName("id"))
 	w.Write([]byte(m.Note))
+}
+
+func (m *MainController) Ping(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	var message = models.Message{
+		Message: "pong",
+	}
+	json.NewEncoder(w).Encode(message)
 }
