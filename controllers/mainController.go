@@ -5,6 +5,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"encoding/json"
 	"gocrud/models"
+	"gocrud/helpers"
 )
 
 type MainController struct {
@@ -34,4 +35,5 @@ func (m *MainController) Ping(w http.ResponseWriter, r *http.Request, _ httprout
 		Message: "pong",
 	}
 	json.NewEncoder(w).Encode(message)
+	helpers.Log(w, r)
 }
