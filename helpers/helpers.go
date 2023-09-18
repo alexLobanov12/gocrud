@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"log"
 	"os"
+	"time"
 )
 
-const (
-	LOG_FILE = "./logs/myapp_log.txt"
+var (
+	LOG_FILE = "./logs/" + string(time.Now().Format("2006-01-02")) + ".log"
 )
 
 func Log (_ http.ResponseWriter, r *http.Request) {
