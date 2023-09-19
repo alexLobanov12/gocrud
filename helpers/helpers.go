@@ -11,6 +11,11 @@ var (
 	LOG_FILE = "./logs/" + string(time.Now().Format("2006-01-02")) + ".log"
 )
 
+const (
+	LOG_API = 1
+	LOG_CUSTOM = 2
+)
+
 func Log (_ http.ResponseWriter, r *http.Request) {
     logFile, err := os.OpenFile(LOG_FILE, os.O_APPEND|os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {

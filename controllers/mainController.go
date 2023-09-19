@@ -6,6 +6,9 @@ import (
 	"encoding/json"
 	"gocrud/models"
 	"gocrud/helpers"
+	"log"
+	_ "io/ioutil"
+	"fmt"
 )
 
 type MainController struct {
@@ -36,4 +39,21 @@ func (m *MainController) Ping(w http.ResponseWriter, r *http.Request, _ httprout
 	}
 	json.NewEncoder(w).Encode(message)
 	helpers.Log(w, r)
+}
+
+
+func (m *MainController) Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	w.Header().Set("Content-Type", "application/json")
+	var loginData models.Login
+	err := json.NewDecoder(r.Body).Decode(&loginData)
+	if err != nil {
+		if err.Error() == "EOF" {
+			fmt.Println("empty data")
+			return
+		} else {
+			log.Fatal(err)
+		}
+	}
+	fmt.Println(&loginData)
+
 }

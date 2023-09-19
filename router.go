@@ -24,12 +24,13 @@ func CreateRoutes() {
 	router.GET("/notes", MController.Notes)
 	router.GET("/notes/:id", MController.ShowNote)
 	router.GET(apiV1Prefix + "/ping", MController.Ping)
+	router.POST(apiV1Prefix + "/login", MController.Login)
 
 	config, err := yaml.ReadFile("config.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
 	port, _ := config.Get("port")
-	errorServer := http.ListenAndServe(port, router)
+	errorServer := http.ListenAndServe("127.0.0.1" + port, router)
 	log.Fatal(errorServer)
 }
