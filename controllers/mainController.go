@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"gocrud/models"
 	"gocrud/helpers"
-	"log"
+	_ "log"
 	_ "io/ioutil"
 	"fmt"
 )
@@ -48,12 +48,37 @@ func (m *MainController) Login(w http.ResponseWriter, r *http.Request, _ httprou
 	err := json.NewDecoder(r.Body).Decode(&loginData)
 	if err != nil {
 		if err.Error() == "EOF" {
-			fmt.Println("empty data")
+			loginError := models.LoginError{
+				Errors: []string{
+					"empty json data",
+				},
+				Status: 400,
+			}
+			w.WriteHeader(400)
+			json.NewEncoder(w).Encode(loginError)
+			helpers.Log(w, r)
 			return
-		} else {
-			log.Fatal(err)
 		}
 	}
+
+	errLogin := loginData.ValidateLogin()
+	var errorsLoginMsg []string
+	if errLogin != nil {
+		for _, v := range errLogin {
+			errorsLoginMsg = append(errorsLoginMsg, v.Error())
+		}
+	}
+
+	if errorsLoginMsg != nil {
+		loginErrorResp := models.LoginError{
+			Errors: errorsLoginMsg,
+			Status: 400,
+		}
+		json.NewEncoder(w).Encode(loginErrorResp)
+		helpers.Log(w, r)
+		return
+	}
+	fmt.Println(errorsLoginMsg)
 	fmt.Println(&loginData)
 
 }

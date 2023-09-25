@@ -22,7 +22,19 @@ func Log (_ http.ResponseWriter, r *http.Request) {
         log.Panic(err)
     }
     defer logFile.Close()
+	userIP := ReadUserIP(r)
 	log.SetOutput(logFile)
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
-	log.Println(r.URL.Path + ": Logging to custom file")
+	log.Println(r.URL.Path +  " ip address: " + userIP)
+}
+
+func ReadUserIP(r *http.Request) string {
+    IPAddress := r.Header.Get("X-Real-Ip")
+    if IPAddress == "" {
+        IPAddress = r.Header.Get("X-Forwarded-For")
+    }
+    if IPAddress == "" {
+        IPAddress = r.RemoteAddr
+    }
+    return IPAddress
 }
